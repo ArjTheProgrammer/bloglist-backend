@@ -3,6 +3,7 @@ const app = express()
 const logger = require('./utils/logger')
 const config = require('./utils/config')
 const mongoose = require('mongoose')
+const blogRouter = require('./controllers/notes')
 
 mongoose.set('strictQuery', false)
 
@@ -16,8 +17,7 @@ mongoose.connect(config.MONGODB_URI)
     logger.error('error connecting to MongoDB: ', error.message)
 })
 
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
+app.use(express.json())
+app.use('/api/blogs', blogRouter)
 
 module.exports = app
