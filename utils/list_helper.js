@@ -31,10 +31,23 @@ const mostBlogs = (blogs) => {
 
     return mostBlog
 }
+
+const favAuth = (blogs) => {
+    let fav = blogs[0]
+
+    for (let i = 1; i < blogs.length; i++){
+        if (blogs[i].likes > fav.likes){
+            fav = blogs[i]
+        }
+    }
+
+    return fav
+}
   
   module.exports = {
     dummy,
     totalLikes,
     favBlog,
-    mostBlogs
+    mostBlogs,
+    favAuth
   }
