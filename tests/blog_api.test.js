@@ -83,7 +83,7 @@ test('verifies that if the likes property is missing from the request', async ()
     assert.strictEqual(savedBlogs[savedBlogs.length - 1].likes, 0)
 })
 
-test.only('400 post request for missing title/url', async () => {
+test('400 post request for missing title/url', async () => {
     const newBlog = {
         title: "I love hallways",
         author: "sisigbuyas"
@@ -94,6 +94,37 @@ test.only('400 post request for missing title/url', async () => {
     .send(newBlog)
     .expect(400)
     .expect('Content-Type', /application\/json/)
+})
+
+test('get a single blog using id', async () => {
+    const blogs = await api
+    .get('/api/blogs/')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+    const blogById = await api
+    .get(`/api/blogs/${blogs.body[0].id}/`)
+
+    assert.deepStrictEqual(blogs.body[0], blogById.body)
+})
+
+test.only('delete a single blog using id', async () => {
+    const blogs = await api
+    .get('/api/blogs/')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+    const contents = blogs.body
+
+    console.log(contents)
+
+    await api
+    .delete(`/api/blogs/${contents[0].id}/`)
+    .expect(204)
+
+    await api
+    .get(`/api/blogs/${blogs.body[0].id}/`)
+    .expect(404)
 })
 
 after(async () => {
