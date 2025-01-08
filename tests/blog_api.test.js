@@ -31,7 +31,7 @@ test('check if all has id attributes and not _id', async () => {
     })
 })
 
-test.only('adding new blog data', async () => {
+test('adding new blog data', async () => {
     const newBlog = {
         title: "I love hallways",
         author: "sisigbuyas",
@@ -61,6 +61,39 @@ test.only('adding new blog data', async () => {
     console.log(contents)
 
     assert.deepStrictEqual(contents[contents.length - 1], newBlog)
+})
+
+test('verifies that if the likes property is missing from the request', async () => {
+    const newBlog = {
+        title: "I love hallways",
+        author: "sisigbuyas",
+        url: "http://facebook.com/silaganrj",
+    }
+
+    await api
+    .post('/api/blogs/')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    const savedBlogs = await helper.blogsInDb()
+
+    console.log(savedBlogs[savedBlogs.length - 1])
+
+    assert.strictEqual(savedBlogs[savedBlogs.length - 1].likes, 0)
+})
+
+test.only('400 post request for missing title/url', async () => {
+    const newBlog = {
+        title: "I love hallways",
+        author: "sisigbuyas"
+    }
+
+    await api
+    .post('/api/blogs/')
+    .send(newBlog)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
 })
 
 after(async () => {
