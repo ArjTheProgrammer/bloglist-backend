@@ -108,7 +108,7 @@ test('get a single blog using id', async () => {
     assert.deepStrictEqual(blogs.body[0], blogById.body)
 })
 
-test.only('delete a single blog using id', async () => {
+test('delete a single blog using id', async () => {
     const blogs = await api
     .get('/api/blogs/')
     .expect(200)
@@ -125,6 +125,31 @@ test.only('delete a single blog using id', async () => {
     await api
     .get(`/api/blogs/${blogs.body[0].id}/`)
     .expect(404)
+})
+
+test.only('update a single blog using id', async () => {
+    const blogs = await api
+    .get('/api/blogs/')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+    const contents = blogs.body
+
+    const prevBlog = contents[0]
+
+    console.log(prevBlog)
+
+    const update = await api
+    .put(`/api/blogs/${contents[0].id}/`)
+    .send({likes: 10})
+    .expect(200)
+
+    const blog = await api.get(`/api/blogs/${contents[0].id}/`)
+
+    console.log(update.body)
+    console.log(blog.body)
+
+    assert.strictEqual(update.body.likes, blog.body.likes)
 })
 
 after(async () => {
