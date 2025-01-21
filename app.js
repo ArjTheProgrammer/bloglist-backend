@@ -6,6 +6,7 @@ const config = require('./utils/config')
 const mongoose = require('mongoose')
 const blogRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
+const userRouter = require('./controllers/users')
 
 mongoose.set('strictQuery', false)
 
@@ -22,6 +23,8 @@ mongoose.connect(config.MONGODB_URI)
 
 app.use(express.json())
 app.use(middleware.requestLogger)
+
+app.use('/api/users', userRouter)
 app.use('/api/blogs', blogRouter)
 
 app.use(middleware.unknownEndpoint)
