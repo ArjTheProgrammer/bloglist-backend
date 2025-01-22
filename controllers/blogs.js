@@ -3,7 +3,7 @@ const Blog = require('../models/blog.model')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user.model')
 
-const getTokenFrom = async (request) => {
+const getTokenFrom = (request) => {
     const authorization = request.get('Authorization')
     if (authorization && authorization.startsWith('Bearer ')){
         return authorization.replace('Bearer ', '')
@@ -32,7 +32,7 @@ blogRouter.post('/', async (request, response) => {
         author: body.author, 
         url: body.url, 
         likes: body.likes,
-        url: user._id
+        user: user._id
     })
     const savedBlog = await blog.save()
     user.blogs = user.blogs.concat(savedBlog._id)
