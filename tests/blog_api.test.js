@@ -152,6 +152,24 @@ test.only('update a single blog using id', async () => {
     assert.strictEqual(update.body.likes, blog.body.likes)
 })
 
+test('adding a blog fails with status code 401 if token is not provided', async () => {
+    const newBlog = {
+      title: 'No Token Blog',
+      author: 'No Token Author',
+      url: 'http://notoken.com',
+      likes: 0,
+    };
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401) // Expect unauthorized
+      .expect('Content-Type', /application\/json/);
+  
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length); // No new blogs should be added
+  });
+
 after(async () => {
     mongoose.connection.close()
 })
