@@ -2,13 +2,13 @@ const blogRouter = require('express').Router()
 const Blog = require('../models/blog.model')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user.model')
-
+const middleware = require('../utils/middleware')
 
 blogRouter.get('/', async (request, response) => {
     response.send(await Blog.find({}).populate('user', {username: 1, name: 1}))
 })
 
-blogRouter.post('/', async (request, response) => {
+blogRouter.post('/', middleware.userDecoder, async (request, response) => {
     const body = request.body
 
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
